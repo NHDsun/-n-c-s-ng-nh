@@ -135,7 +135,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
                 "Sau mỗi vòng lặp, phần tử lớn nhất sẽ dần được đẩy về cuối mảng. " +
                 "Quá trình này lặp lại cho đến khi toàn bộ mảng được sắp xếp theo thứ tự tăng dần."
             );
-
+            ShowComparison("Bubble");
             lblStatus.Text = "Bubble Sort đang chạy";
             BubbleSort();
         }
@@ -171,7 +171,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
                 "Các phần tử nhỏ hơn pivot được đưa về bên trái, các phần tử lớn hơn pivot được đưa về bên phải. " +
                 "Sau khi phân hoạch xong, thuật toán tiếp tục áp dụng đệ quy cho từng mảng con cho đến khi mảng được sắp xếp hoàn chỉnh."
             );
-
+            ShowComparison("Quick");
             lblStatus.Text = "Quick Sort đang chạy";
             QuickSort(0, arr.Length - 1);
         }
@@ -213,7 +213,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
                "Sau đó, phần tử lớn nhất được hoán đổi với phần tử cuối mảng và loại khỏi heap. " +
                "Heap được điều chỉnh lại để tiếp tục tìm phần tử lớn nhất tiếp theo, quá trình này lặp lại cho đến khi mảng được sắp xếp."
            );
-
+            ShowComparison("Heap");
             lblStatus.Text = "Heap Sort đang chạy";
             HeapSort();
         }
@@ -260,13 +260,14 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
         private void btnMergeSort_Click(object sender, EventArgs e)
         {
+            
             if (!CheckArray()) return;
             Explain(
                 "Merge Sort hoạt động theo nguyên lý chia để trị. " +
                 "Mảng ban đầu được chia thành các mảng con nhỏ hơn cho đến khi mỗi mảng chỉ còn một phần tử. " +
                 "Sau đó, các mảng con được trộn lại với nhau theo thứ tự tăng dần để tạo thành mảng đã được sắp xếp."
             );
-
+            ShowComparison("Merge");
             lblStatus.Text = "Merge Sort đang chạy";
             MergeSort(0, arr.Length - 1);
         }
@@ -315,6 +316,40 @@ namespace Đồ_Án_Cơ_Sở_65130410
                 return false;
             }
             return true;
+        }
+        void ShowComparison(string algo)
+        {
+            if (algo == "Bubble")
+                txtExplain.Text +=
+                    "\r\n\r\nSo sánh với các thuật toán khác:\r\n" +
+                    "- Bubble Sort có cách hoạt động đơn giản nhất, dễ hiểu và dễ quan sát từng bước.\r\n" +
+                    "- Tuy nhiên, độ phức tạp O(n²) khiến thuật toán này chậm khi số phần tử tăng.\r\n" +
+                    "- Quick Sort, Merge Sort và Heap Sort có hiệu suất tốt hơn với O(n log n).\r\n" +
+                    "- Bubble Sort phù hợp để minh họa nguyên lý sắp xếp hơn là sử dụng trong thực tế.";
+
+            if (algo == "Quick")
+                txtExplain.Text +=
+                    "\r\n\r\nSo sánh với các thuật toán khác:\r\n" +
+                    "- Quick Sort nhanh hơn Bubble Sort trong hầu hết các trường hợp.\r\n" +
+                    "- Thuật toán hoạt động hiệu quả nhờ chia mảng theo pivot.\r\n" +
+                    "- Tuy nhiên, Quick Sort không ổn định như Merge Sort.\r\n" +
+                    "- Trong một số trường hợp xấu, Quick Sort có thể chậm hơn Heap Sort.";
+
+            if (algo == "Merge")
+                txtExplain.Text +=
+                    "\r\n\r\nSo sánh với các thuật toán khác:\r\n" +
+                    "- Merge Sort luôn đảm bảo độ phức tạp O(n log n) trong mọi trường hợp.\r\n" +
+                    "- Thuật toán ổn định, giữ nguyên thứ tự các phần tử bằng nhau.\r\n" +
+                    "- So với Quick Sort, Merge Sort tốn thêm bộ nhớ phụ.\r\n" +
+                    "- So với Heap Sort, Merge Sort dễ hiểu và dễ minh họa hơn.";
+
+            if (algo == "Heap")
+                txtExplain.Text +=
+                    "\r\n\r\nSo sánh với các thuật toán khác:\r\n" +
+                    "- Heap Sort có hiệu suất ổn định O(n log n), không phụ thuộc dữ liệu đầu vào.\r\n" +
+                    "- Không cần bộ nhớ phụ như Merge Sort.\r\n" +
+                    "- Khó hiểu hơn Bubble Sort và Quick Sort do dựa trên cấu trúc heap.\r\n" +
+                    "- Phù hợp với các bài toán yêu cầu hiệu suất ổn định.";
         }
 
     }
