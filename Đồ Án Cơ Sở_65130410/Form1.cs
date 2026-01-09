@@ -12,6 +12,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
 {
     public partial class Form1 : Form
     {
+        bool isSorting = false;
         int[] arr;
         Random rd = new Random();
 
@@ -35,7 +36,6 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
         private void btnRandom_Click(object sender, EventArgs e)
         {
-
             int n = (int)numSize.Value;
             arr = new int[n];
 
@@ -56,9 +56,6 @@ namespace Đồ_Án_Cơ_Sở_65130410
             DrawArray();
             lblStatus.Text = "Đã sinh mảng lộn xộn";
         }
-
-
-
 
         void DrawArray(int a = -1, int b = -1)
         {
@@ -108,7 +105,6 @@ namespace Đồ_Án_Cơ_Sở_65130410
             }
         }
 
-
         async Task Delay()
         {
             await Task.Delay(200);
@@ -128,7 +124,11 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
         private void btnBubbleSort_Click(object sender, EventArgs e)
         {
+            if (isSorting) return;
             if (!CheckArray()) return;
+
+            LockControls();
+
             Explain(
                 "Bubble Sort hoạt động bằng cách so sánh từng cặp phần tử liền kề trong mảng. " +
                 "Nếu phần tử đứng trước lớn hơn phần tử đứng sau thì chúng sẽ được hoán đổi vị trí. " +
@@ -161,11 +161,16 @@ namespace Đồ_Án_Cơ_Sở_65130410
             }
 
             lblStatus.Text = "Bubble Sort xong";
+            UnlockControls();
         }
 
         private void btnQuickSort_Click(object sender, EventArgs e)
         {
+            if (isSorting) return;
             if (!CheckArray()) return;
+
+            LockControls();
+
             Explain(
                 "Quick Sort chọn một phần tử làm chốt (pivot) để phân chia mảng. " +
                 "Các phần tử nhỏ hơn pivot được đưa về bên trái, các phần tử lớn hơn pivot được đưa về bên phải. " +
@@ -202,17 +207,24 @@ namespace Đồ_Án_Cơ_Sở_65130410
             QuickSort(i, r);
 
             if (l == 0 && r == arr.Length - 1)
+            {
                 lblStatus.Text = "Quick Sort xong";
+                UnlockControls();
+            }
         }
 
         private void btnHeapSort_Click(object sender, EventArgs e)
         {
+            if (isSorting) return;
             if (!CheckArray()) return;
+
+            LockControls();
+
             Explain(
-               "Heap Sort bắt đầu bằng việc xây dựng cấu trúc heap từ mảng ban đầu, trong đó phần tử lớn nhất luôn nằm ở gốc heap. " +
-               "Sau đó, phần tử lớn nhất được hoán đổi với phần tử cuối mảng và loại khỏi heap. " +
-               "Heap được điều chỉnh lại để tiếp tục tìm phần tử lớn nhất tiếp theo, quá trình này lặp lại cho đến khi mảng được sắp xếp."
-           );
+                "Heap Sort bắt đầu bằng việc xây dựng cấu trúc heap từ mảng ban đầu, trong đó phần tử lớn nhất luôn nằm ở gốc heap. " +
+                "Sau đó, phần tử lớn nhất được hoán đổi với phần tử cuối mảng và loại khỏi heap. " +
+                "Heap được điều chỉnh lại để tiếp tục tìm phần tử lớn nhất tiếp theo, quá trình này lặp lại cho đến khi mảng được sắp xếp."
+            );
             ShowComparison("Heap");
             lblStatus.Text = "Heap Sort đang chạy";
             HeapSort();
@@ -220,7 +232,6 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
         private async void HeapSort()
         {
-            if (!CheckArray()) return;
             int n = arr.Length;
 
             for (int i = n / 2 - 1; i >= 0; i--)
@@ -235,12 +246,11 @@ namespace Đồ_Án_Cơ_Sở_65130410
             }
 
             lblStatus.Text = "Heap Sort xong";
+            UnlockControls();
         }
-
 
         private async Task Heapify(int n, int i)
         {
-            if (!CheckArray()) return;
             int largest = i;
             int l = 2 * i + 1;
             int r = 2 * i + 2;
@@ -257,11 +267,13 @@ namespace Đồ_Án_Cơ_Sở_65130410
             }
         }
 
-
         private void btnMergeSort_Click(object sender, EventArgs e)
         {
-            
+            if (isSorting) return;
             if (!CheckArray()) return;
+
+            LockControls();
+
             Explain(
                 "Merge Sort hoạt động theo nguyên lý chia để trị. " +
                 "Mảng ban đầu được chia thành các mảng con nhỏ hơn cho đến khi mỗi mảng chỉ còn một phần tử. " +
@@ -282,7 +294,10 @@ namespace Đồ_Án_Cơ_Sở_65130410
             await Merge(l, m, r);
 
             if (l == 0 && r == arr.Length - 1)
+            {
                 lblStatus.Text = "Merge Sort xong";
+                UnlockControls();
+            }
         }
 
         private async Task Merge(int l, int m, int r)
@@ -303,6 +318,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
                 await Delay();
             }
         }
+
         bool CheckArray()
         {
             if (arr == null || arr.Length == 0)
@@ -317,6 +333,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
             }
             return true;
         }
+
         void ShowComparison(string algo)
         {
             if (algo == "Bubble")
@@ -352,5 +369,30 @@ namespace Đồ_Án_Cơ_Sở_65130410
                     "- Phù hợp với các bài toán yêu cầu hiệu suất ổn định.";
         }
 
+        void LockControls()
+        {
+            isSorting = true;
+            btnBubbleSort.Enabled = false;
+            btnQuickSort.Enabled = false;
+            btnHeapSort.Enabled = false;
+            btnMergeSort.Enabled = false;
+            btnRandom.Enabled = false;
+        }
+
+        void UnlockControls()
+        {
+            isSorting = false;
+            btnBubbleSort.Enabled = true;
+            btnQuickSort.Enabled = true;
+            btnHeapSort.Enabled = true;
+            btnMergeSort.Enabled = true;
+            btnRandom.Enabled = true;
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
+

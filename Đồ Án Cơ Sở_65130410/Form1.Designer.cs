@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panelDraw = new System.Windows.Forms.Panel();
             this.btnRandom = new System.Windows.Forms.Button();
             this.btnQuickSort = new System.Windows.Forms.Button();
@@ -38,7 +39,9 @@
             this.txtExplain = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnBubbleSort = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panelDraw
@@ -114,6 +117,7 @@
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
+            this.lblStatus.ForeColor = System.Drawing.Color.Cornsilk;
             this.lblStatus.Location = new System.Drawing.Point(58, 45);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(84, 16);
@@ -134,6 +138,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.Cornsilk;
             this.label1.Location = new System.Drawing.Point(512, 45);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(40, 16);
@@ -150,11 +155,23 @@
             this.btnBubbleSort.UseVisualStyleBackColor = true;
             this.btnBubbleSort.Click += new System.EventHandler(this.btnBubbleSort_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+            this.pictureBox1.Location = new System.Drawing.Point(634, 264);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(133, 133);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnBubbleSort);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtExplain);
@@ -168,6 +185,7 @@
             this.Name = "Form1";
             this.Text = "Đồ Án NHD_65130410";
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -185,6 +203,7 @@
         private System.Windows.Forms.TextBox txtExplain;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnBubbleSort;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
