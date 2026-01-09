@@ -12,7 +12,8 @@ namespace Đồ_Án_Cơ_Sở_65130410
 {
     public partial class Form1 : Form
     {
-        bool isSorting = false;
+        int quickRunning = 0;
+        bool isSorted = false;
         int[] arr;
         Random rd = new Random();
 
@@ -36,6 +37,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
         private void btnRandom_Click(object sender, EventArgs e)
         {
+            isSorted = false;
             int n = (int)numSize.Value;
             arr = new int[n];
 
@@ -54,7 +56,10 @@ namespace Đồ_Án_Cơ_Sở_65130410
             }
 
             DrawArray();
+            isSorted = false;
             lblStatus.Text = "Đã sinh mảng lộn xộn";
+            isSorted = false;
+
         }
 
         void DrawArray(int a = -1, int b = -1)
@@ -78,7 +83,12 @@ namespace Đồ_Án_Cơ_Sở_65130410
                 Color c1 = Color.FromArgb(52, 152, 219);
                 Color c2 = Color.FromArgb(41, 128, 185);
 
-                if (i == a || i == b)
+                if (isSorted)
+                {
+                    c1 = Color.FromArgb(46, 204, 113);
+                    c2 = Color.FromArgb(39, 174, 96);
+                }
+                else if (i == a || i == b)
                 {
                     c1 = Color.FromArgb(231, 76, 60);
                     c2 = Color.FromArgb(192, 57, 43);
@@ -124,7 +134,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
         private void btnBubbleSort_Click(object sender, EventArgs e)
         {
-            if (isSorting) return;
+            isSorted = false;
             if (!CheckArray()) return;
 
             LockControls();
@@ -159,14 +169,15 @@ namespace Đồ_Án_Cơ_Sở_65130410
                     }
                 }
             }
-
+            isSorted = true;
             lblStatus.Text = "Bubble Sort xong";
             UnlockControls();
+            DrawAllGreen();
         }
 
         private void btnQuickSort_Click(object sender, EventArgs e)
         {
-            if (isSorting) return;
+            isSorted = false;
             if (!CheckArray()) return;
 
             LockControls();
@@ -180,42 +191,47 @@ namespace Đồ_Án_Cơ_Sở_65130410
             lblStatus.Text = "Quick Sort đang chạy";
             QuickSort(0, arr.Length - 1);
         }
-
-        private async void QuickSort(int l, int r)
+        async void QuickSort(int l, int r)
         {
-            if (l >= r) return;
-
-            int pivot = arr[(l + r) / 2];
-            int i = l, j = r;
-
-            while (i <= j)
+            quickRunning++;
+            if (l < r)
             {
-                while (arr[i] < pivot) i++;
-                while (arr[j] > pivot) j--;
+                int pivot = arr[(l + r) / 2];
+                int i = l, j = r;
 
-                if (i <= j)
+                while (i <= j)
                 {
-                    Swap(i, j);
-                    DrawArray(i, j);
-                    await Delay();
-                    i++;
-                    j--;
+                    while (arr[i] < pivot) i++;
+                    while (arr[j] > pivot) j--;
+
+                    if (i <= j)
+                    {
+                        Swap(i, j);
+                        DrawArray(i, j);
+                        await Delay();
+                        i++;
+                        j--;
+                    }
                 }
+
+                if (l < j) QuickSort(l, j);
+                if (i < r) QuickSort(i, r);
             }
 
-            QuickSort(l, j);
-            QuickSort(i, r);
+            quickRunning--;   
 
-            if (l == 0 && r == arr.Length - 1)
+            if (quickRunning == 0)
             {
                 lblStatus.Text = "Quick Sort xong";
                 UnlockControls();
+                isSorted = true;
+                DrawAllGreen();
             }
         }
 
         private void btnHeapSort_Click(object sender, EventArgs e)
         {
-            if (isSorting) return;
+            isSorted = false;
             if (!CheckArray()) return;
 
             LockControls();
@@ -247,6 +263,8 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
             lblStatus.Text = "Heap Sort xong";
             UnlockControls();
+            isSorted = true;
+            DrawAllGreen();
         }
 
         private async Task Heapify(int n, int i)
@@ -269,7 +287,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
         private void btnMergeSort_Click(object sender, EventArgs e)
         {
-            if (isSorting) return;
+            isSorted = false;
             if (!CheckArray()) return;
 
             LockControls();
@@ -297,6 +315,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
             {
                 lblStatus.Text = "Merge Sort xong";
                 UnlockControls();
+
             }
         }
 
@@ -371,7 +390,6 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
         void LockControls()
         {
-            isSorting = true;
             btnBubbleSort.Enabled = false;
             btnQuickSort.Enabled = false;
             btnHeapSort.Enabled = false;
@@ -381,7 +399,6 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
         void UnlockControls()
         {
-            isSorting = false;
             btnBubbleSort.Enabled = true;
             btnQuickSort.Enabled = true;
             btnHeapSort.Enabled = true;
@@ -393,6 +410,27 @@ namespace Đồ_Án_Cơ_Sở_65130410
         {
 
         }
+        void DrawAllGreen()
+        {
+            panelDraw.Refresh();
+            Graphics g = panelDraw.CreateGraphics();
+
+            int w = panelDraw.Width / arr.Length;
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                int h = arr[i];
+                int x = i * w + 4;
+                int y = panelDraw.Height - h;
+                int width = w - 8;
+
+                using (Brush brush = new SolidBrush(Color.LimeGreen))
+                {
+                    g.FillRectangle(brush, x, y, width, h);
+                }
+            }
+        }
+
     }
 }
 

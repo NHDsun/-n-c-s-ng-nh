@@ -47,16 +47,17 @@
             // panelDraw
             // 
             this.panelDraw.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelDraw.Location = new System.Drawing.Point(61, 74);
+            this.panelDraw.Location = new System.Drawing.Point(34, 74);
             this.panelDraw.Name = "panelDraw";
             this.panelDraw.Size = new System.Drawing.Size(428, 164);
             this.panelDraw.TabIndex = 0;
             // 
             // btnRandom
             // 
-            this.btnRandom.Location = new System.Drawing.Point(61, 303);
+            this.btnRandom.AutoSize = true;
+            this.btnRandom.Location = new System.Drawing.Point(40, 303);
             this.btnRandom.Name = "btnRandom";
-            this.btnRandom.Size = new System.Drawing.Size(75, 23);
+            this.btnRandom.Size = new System.Drawing.Size(75, 26);
             this.btnRandom.TabIndex = 0;
             this.btnRandom.Text = "Start";
             this.btnRandom.UseVisualStyleBackColor = true;
@@ -64,9 +65,10 @@
             // 
             // btnQuickSort
             // 
-            this.btnQuickSort.Location = new System.Drawing.Point(158, 303);
+            this.btnQuickSort.AutoSize = true;
+            this.btnQuickSort.Location = new System.Drawing.Point(151, 303);
             this.btnQuickSort.Name = "btnQuickSort";
-            this.btnQuickSort.Size = new System.Drawing.Size(75, 23);
+            this.btnQuickSort.Size = new System.Drawing.Size(75, 26);
             this.btnQuickSort.TabIndex = 1;
             this.btnQuickSort.Text = "QuickSort";
             this.btnQuickSort.UseVisualStyleBackColor = true;
@@ -74,9 +76,10 @@
             // 
             // btnHeapSort
             // 
-            this.btnHeapSort.Location = new System.Drawing.Point(259, 303);
+            this.btnHeapSort.AutoSize = true;
+            this.btnHeapSort.Location = new System.Drawing.Point(254, 303);
             this.btnHeapSort.Name = "btnHeapSort";
-            this.btnHeapSort.Size = new System.Drawing.Size(75, 23);
+            this.btnHeapSort.Size = new System.Drawing.Size(75, 26);
             this.btnHeapSort.TabIndex = 2;
             this.btnHeapSort.Text = "HeapSort";
             this.btnHeapSort.UseVisualStyleBackColor = true;
@@ -84,9 +87,10 @@
             // 
             // btnMergeSort
             // 
-            this.btnMergeSort.Location = new System.Drawing.Point(357, 303);
+            this.btnMergeSort.AutoSize = true;
+            this.btnMergeSort.Location = new System.Drawing.Point(359, 303);
             this.btnMergeSort.Name = "btnMergeSort";
-            this.btnMergeSort.Size = new System.Drawing.Size(82, 23);
+            this.btnMergeSort.Size = new System.Drawing.Size(82, 26);
             this.btnMergeSort.TabIndex = 3;
             this.btnMergeSort.Text = "MergeSort";
             this.btnMergeSort.UseVisualStyleBackColor = true;
@@ -94,7 +98,7 @@
             // 
             // numSize
             // 
-            this.numSize.Location = new System.Drawing.Point(61, 255);
+            this.numSize.Location = new System.Drawing.Point(34, 255);
             this.numSize.Maximum = new decimal(new int[] {
             20,
             0,
@@ -118,7 +122,7 @@
             // 
             this.lblStatus.AutoSize = true;
             this.lblStatus.ForeColor = System.Drawing.Color.Cornsilk;
-            this.lblStatus.Location = new System.Drawing.Point(58, 45);
+            this.lblStatus.Location = new System.Drawing.Point(31, 45);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(84, 16);
             this.lblStatus.TabIndex = 5;
@@ -127,7 +131,7 @@
             // txtExplain
             // 
             this.txtExplain.BackColor = System.Drawing.Color.White;
-            this.txtExplain.Location = new System.Drawing.Point(515, 74);
+            this.txtExplain.Location = new System.Drawing.Point(477, 74);
             this.txtExplain.Multiline = true;
             this.txtExplain.Name = "txtExplain";
             this.txtExplain.ReadOnly = true;
@@ -139,7 +143,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.Cornsilk;
-            this.label1.Location = new System.Drawing.Point(512, 45);
+            this.label1.Location = new System.Drawing.Point(474, 45);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(40, 16);
             this.label1.TabIndex = 7;
@@ -147,9 +151,10 @@
             // 
             // btnBubbleSort
             // 
+            this.btnBubbleSort.AutoSize = true;
             this.btnBubbleSort.Location = new System.Drawing.Point(477, 303);
             this.btnBubbleSort.Name = "btnBubbleSort";
-            this.btnBubbleSort.Size = new System.Drawing.Size(86, 23);
+            this.btnBubbleSort.Size = new System.Drawing.Size(86, 26);
             this.btnBubbleSort.TabIndex = 8;
             this.btnBubbleSort.Text = "BubbleSort";
             this.btnBubbleSort.UseVisualStyleBackColor = true;
@@ -170,6 +175,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnBubbleSort);
