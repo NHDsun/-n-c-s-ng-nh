@@ -18,23 +18,47 @@ namespace Đồ_Án_Cơ_Sở_65130410
         public Form1()
         {
             InitializeComponent();
+
+            numSize.Minimum = 5;
+            numSize.Maximum = 20;
+            numSize.Value = 10;
+
             this.BackColor = Color.FromArgb(30, 30, 30);
             this.Font = new Font("Segoe UI", 10);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.Text = "Minh họa giải thuật sắp xếp";
+            panelDraw.BackColor = Color.White;
+            panelDraw.BorderStyle = BorderStyle.FixedSingle;
 
+            lblStatus.ForeColor = Color.White;
+            lblStatus.Text = "Sẵn sàng";
         }
 
         private void btnRandom_Click(object sender, EventArgs e)
         {
+
             int n = (int)numSize.Value;
             arr = new int[n];
 
+            int maxH = panelDraw.Height - 20;
+            int step = maxH / n;
+
             for (int i = 0; i < n; i++)
-                arr[i] = rd.Next(10, 300);
+                arr[i] = step * (i + 1);
+
+            for (int i = n - 1; i > 0; i--)
+            {
+                int j = rd.Next(0, i + 1);
+                int t = arr[i];
+                arr[i] = arr[j];
+                arr[j] = t;
+            }
 
             DrawArray();
+            lblStatus.Text = "Đã sinh mảng lộn xộn";
         }
+
+
+
 
         void DrawArray(int a = -1, int b = -1)
         {
@@ -42,21 +66,45 @@ namespace Đồ_Án_Cơ_Sở_65130410
 
             panelDraw.Refresh();
             Graphics g = panelDraw.CreateGraphics();
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
             int w = panelDraw.Width / arr.Length;
+            int maxH = panelDraw.Height - 10;
 
             for (int i = 0; i < arr.Length; i++)
             {
-                Brush br = Brushes.Blue;
-                if (i == a || i == b) br = Brushes.Red;
+                int h = Math.Min(arr[i], maxH);
+                int x = i * w + 4;
+                int y = panelDraw.Height - h;
+                int width = w - 8;
 
-                g.FillRectangle(
-                    br,
-                    i * w + 3,
-                    panelDraw.Height - arr[i],
-                    w - 6,
-                    arr[i]
-                );
+                Color c1 = Color.FromArgb(52, 152, 219);
+                Color c2 = Color.FromArgb(41, 128, 185);
 
+                if (i == a || i == b)
+                {
+                    c1 = Color.FromArgb(231, 76, 60);
+                    c2 = Color.FromArgb(192, 57, 43);
+                }
+
+                using (var path = new System.Drawing.Drawing2D.GraphicsPath())
+                {
+                    int r = 6;
+                    path.AddArc(x, y, r, r, 180, 90);
+                    path.AddArc(x + width - r, y, r, r, 270, 90);
+                    path.AddArc(x + width - r, y + h - r, r, r, 0, 90);
+                    path.AddArc(x, y + h - r, r, r, 90, 90);
+                    path.CloseFigure();
+
+                    using (var brush = new System.Drawing.Drawing2D.LinearGradientBrush(
+                        new Rectangle(x, y, width, h),
+                        c1,
+                        c2,
+                        90f))
+                    {
+                        g.FillPath(brush, path);
+                    }
+                }
             }
         }
 
@@ -66,7 +114,69 @@ namespace Đồ_Án_Cơ_Sở_65130410
             await Task.Delay(200);
         }
 
-        async Task QuickSort(int l, int r)
+        void Explain(string text)
+        {
+            txtExplain.Text = text;
+        }
+
+        void Swap(int i, int j)
+        {
+            int t = arr[i];
+            arr[i] = arr[j];
+            arr[j] = t;
+        }
+
+        private void btnBubbleSort_Click(object sender, EventArgs e)
+        {
+            if (!CheckArray()) return;
+            Explain(
+                "Bubble Sort hoạt động bằng cách so sánh từng cặp phần tử liền kề trong mảng. " +
+                "Nếu phần tử đứng trước lớn hơn phần tử đứng sau thì chúng sẽ được hoán đổi vị trí. " +
+                "Sau mỗi vòng lặp, phần tử lớn nhất sẽ dần được đẩy về cuối mảng. " +
+                "Quá trình này lặp lại cho đến khi toàn bộ mảng được sắp xếp theo thứ tự tăng dần."
+            );
+
+            lblStatus.Text = "Bubble Sort đang chạy";
+            BubbleSort();
+        }
+
+        private async void BubbleSort()
+        {
+            int n = arr.Length;
+
+            for (int i = 0; i < n - 1; i++)
+            {
+                for (int j = 0; j < n - i - 1; j++)
+                {
+                    DrawArray(j, j + 1);
+                    await Delay();
+
+                    if (arr[j] > arr[j + 1])
+                    {
+                        Swap(j, j + 1);
+                        DrawArray(j, j + 1);
+                        await Delay();
+                    }
+                }
+            }
+
+            lblStatus.Text = "Bubble Sort xong";
+        }
+
+        private void btnQuickSort_Click(object sender, EventArgs e)
+        {
+            if (!CheckArray()) return;
+            Explain(
+                "Quick Sort chọn một phần tử làm chốt (pivot) để phân chia mảng. " +
+                "Các phần tử nhỏ hơn pivot được đưa về bên trái, các phần tử lớn hơn pivot được đưa về bên phải. " +
+                "Sau khi phân hoạch xong, thuật toán tiếp tục áp dụng đệ quy cho từng mảng con cho đến khi mảng được sắp xếp hoàn chỉnh."
+            );
+
+            lblStatus.Text = "Quick Sort đang chạy";
+            QuickSort(0, arr.Length - 1);
+        }
+
+        private async void QuickSort(int l, int r)
         {
             if (l >= r) return;
 
@@ -88,12 +198,29 @@ namespace Đồ_Án_Cơ_Sở_65130410
                 }
             }
 
-            await QuickSort(l, j);
-            await QuickSort(i, r);
+            QuickSort(l, j);
+            QuickSort(i, r);
+
+            if (l == 0 && r == arr.Length - 1)
+                lblStatus.Text = "Quick Sort xong";
         }
 
-        async Task HeapSort()
+        private void btnHeapSort_Click(object sender, EventArgs e)
         {
+            if (!CheckArray()) return;
+            Explain(
+               "Heap Sort bắt đầu bằng việc xây dựng cấu trúc heap từ mảng ban đầu, trong đó phần tử lớn nhất luôn nằm ở gốc heap. " +
+               "Sau đó, phần tử lớn nhất được hoán đổi với phần tử cuối mảng và loại khỏi heap. " +
+               "Heap được điều chỉnh lại để tiếp tục tìm phần tử lớn nhất tiếp theo, quá trình này lặp lại cho đến khi mảng được sắp xếp."
+           );
+
+            lblStatus.Text = "Heap Sort đang chạy";
+            HeapSort();
+        }
+
+        private async void HeapSort()
+        {
+            if (!CheckArray()) return;
             int n = arr.Length;
 
             for (int i = n / 2 - 1; i >= 0; i--)
@@ -106,10 +233,14 @@ namespace Đồ_Án_Cơ_Sở_65130410
                 await Delay();
                 await Heapify(i, 0);
             }
+
+            lblStatus.Text = "Heap Sort xong";
         }
 
-        async Task Heapify(int n, int i)
+
+        private async Task Heapify(int n, int i)
         {
+            if (!CheckArray()) return;
             int largest = i;
             int l = 2 * i + 1;
             int r = 2 * i + 2;
@@ -126,17 +257,34 @@ namespace Đồ_Án_Cơ_Sở_65130410
             }
         }
 
-        async Task MergeSort(int l, int r)
+
+        private void btnMergeSort_Click(object sender, EventArgs e)
+        {
+            if (!CheckArray()) return;
+            Explain(
+                "Merge Sort hoạt động theo nguyên lý chia để trị. " +
+                "Mảng ban đầu được chia thành các mảng con nhỏ hơn cho đến khi mỗi mảng chỉ còn một phần tử. " +
+                "Sau đó, các mảng con được trộn lại với nhau theo thứ tự tăng dần để tạo thành mảng đã được sắp xếp."
+            );
+
+            lblStatus.Text = "Merge Sort đang chạy";
+            MergeSort(0, arr.Length - 1);
+        }
+
+        private async void MergeSort(int l, int r)
         {
             if (l >= r) return;
 
             int m = (l + r) / 2;
-            await MergeSort(l, m);
-            await MergeSort(m + 1, r);
+            MergeSort(l, m);
+            MergeSort(m + 1, r);
             await Merge(l, m, r);
+
+            if (l == 0 && r == arr.Length - 1)
+                lblStatus.Text = "Merge Sort xong";
         }
 
-        async Task Merge(int l, int m, int r)
+        private async Task Merge(int l, int m, int r)
         {
             int[] temp = new int[r - l + 1];
             int i = l, j = m + 1, k = 0;
@@ -154,43 +302,19 @@ namespace Đồ_Án_Cơ_Sở_65130410
                 await Delay();
             }
         }
-
-        void Swap(int i, int j)
+        bool CheckArray()
         {
-            int t = arr[i];
-            arr[i] = arr[j];
-            arr[j] = t;
-        }
-
-        private async void btnQuickSort_Click(object sender, EventArgs e)
-        {
-            await QuickSort(0, arr.Length - 1);
-            lblStatus.Text = "Quick Sort xong";
-        }
-
-        private async void btnHeapSort_Click(object sender, EventArgs e)
-        {
-            await HeapSort();
-            lblStatus.Text = "Heap Sort xong";
-        }
-
-        private async void btnMergeSort_Click(object sender, EventArgs e)
-        {
-            await MergeSort(0, arr.Length - 1);
-            lblStatus.Text = "Merge Sort xong";
-        }
-        void StyleButton(Button b, Color c)
-        {
-            b.FlatStyle = FlatStyle.Flat;
-            b.FlatAppearance.BorderSize = 0;
-            b.BackColor = c;
-            b.ForeColor = Color.White;
-            b.Height = 38;
-            StyleButton(btnRandom, Color.FromArgb(52, 152, 219));
-            StyleButton(btnQuickSort, Color.FromArgb(46, 204, 113));
-            StyleButton(btnHeapSort, Color.FromArgb(241, 196, 15));
-            StyleButton(btnMergeSort, Color.FromArgb(155, 89, 182));
-
+            if (arr == null || arr.Length == 0)
+            {
+                MessageBox.Show(
+                    "Vui lòng sinh mảng trước khi thực hiện sắp xếp.",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return false;
+            }
+            return true;
         }
 
     }
