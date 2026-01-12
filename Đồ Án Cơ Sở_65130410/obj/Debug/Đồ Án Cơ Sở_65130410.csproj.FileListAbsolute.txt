@@ -1,10 +1,20 @@
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\Đồ Án Cơ Sở_65130410.exe.config
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\Đồ Án Cơ Sở_65130410.exe
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\Đồ Án Cơ Sở_65130410.pdb
 F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\obj\Debug\Đồ Án Cơ Sở_65130410.csproj.AssemblyReference.cache
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\obj\Debug\Đồ Án Cơ Sở_65130410.csproj.ResolveComReference.cache
 F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\obj\Debug\Đồ_Án_Cơ_Sở_65130410.Form1.resources
 F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\obj\Debug\Đồ_Án_Cơ_Sở_65130410.Properties.Resources.resources
 F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\obj\Debug\Đồ Án Cơ Sở_65130410.csproj.GenerateResource.cache
 F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\obj\Debug\Đồ Án Cơ Sở_65130410.csproj.CoreCompileInputs.cache
-F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\Đồ Án Cơ Sở_65130410.exe.config
-F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\Đồ Án Cơ Sở_65130410.exe
-F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\Đồ Án Cơ Sở_65130410.pdb
 F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\obj\Debug\Đồ Án Cơ Sở_65130410.exe
 F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\obj\Debug\Đồ Án Cơ Sở_65130410.pdb
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\ExcelDataReader.DataSet.dll
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\ExcelDataReader.dll
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\System.ValueTuple.dll
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\ExcelDataReader.pdb
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\ExcelDataReader.xml
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\ExcelDataReader.DataSet.pdb
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\ExcelDataReader.DataSet.xml
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\bin\Debug\System.ValueTuple.xml
+F:\Visual C\Đồ Án Cơ Sở_65130410\Đồ Án Cơ Sở_65130410\obj\Debug\__ _n C_.B31661F2.Up2Date

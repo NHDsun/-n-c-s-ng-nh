@@ -1,42 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.IO;
+using ExcelDataReader;
 namespace Đồ_Án_Cơ_Sở_65130410
 {
     public partial class Form1 : Form
     {
+        bool isSorting = false;
+        bool isFromExcel = false;
+        ToolTip barToolTip;
+        int hoverIndex = -1;
         int quickRunning = 0;
         bool isSorted = false;
         int[] arr;
+        string[] labels;
         Random rd = new Random();
 
         public Form1()
         {
             InitializeComponent();
-
+            barToolTip = new ToolTip();
+            barToolTip.InitialDelay = 200;
+            barToolTip.ReshowDelay = 100;
+            barToolTip.AutoPopDelay = 5000;
+            barToolTip.ShowAlways = true;
+            panelDraw.MouseMove += panelDraw_MouseMove;
+            panelDraw.MouseLeave += panelDraw_MouseLeave;
             numSize.Minimum = 5;
             numSize.Maximum = 20;
             numSize.Value = 10;
-
-            this.BackColor = Color.FromArgb(30, 30, 30);
             this.Font = new Font("Segoe UI", 10);
             this.StartPosition = FormStartPosition.CenterScreen;
             panelDraw.BackColor = Color.White;
             panelDraw.BorderStyle = BorderStyle.FixedSingle;
-
             lblStatus.ForeColor = Color.White;
             lblStatus.Text = "Sẵn sàng";
         }
 
         private void btnRandom_Click(object sender, EventArgs e)
         {
+            if (CheckSorting()) return;
+            isFromExcel = false;
             isSorted = false;
             int n = (int)numSize.Value;
             arr = new int[n];
@@ -71,11 +82,13 @@ namespace Đồ_Án_Cơ_Sở_65130410
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             int w = panelDraw.Width / arr.Length;
-            int maxH = panelDraw.Height - 10;
+            int maxValue = arr.Max();
+            int maxHeight = panelDraw.Height - 30;
 
             for (int i = 0; i < arr.Length; i++)
             {
-                int h = Math.Min(arr[i], maxH);
+                int h = (int)((arr[i] * 1.0 / maxValue) * maxHeight);
+
                 int x = i * w + 4;
                 int y = panelDraw.Height - h;
                 int width = w - 8;
@@ -112,6 +125,24 @@ namespace Đồ_Án_Cơ_Sở_65130410
                         g.FillPath(brush, path);
                     }
                 }
+
+                string valueText = arr[i].ToString();
+                Font font = new Font("Segoe UI", 9, FontStyle.Bold);
+                SizeF valueSize = g.MeasureString(valueText, font);
+
+                float valueX = x + (width - valueSize.Width) / 2;
+                float valueY = y - valueSize.Height - 2;
+
+                if (valueY >= 0)
+                    g.DrawString(valueText, font, Brushes.Black, valueX, valueY);
+
+                string indexText = i.ToString();
+                SizeF indexSize = g.MeasureString(indexText, font);
+
+                float indexX = x + (width - indexSize.Width) / 2;
+                float indexY = panelDraw.Height - indexSize.Height;
+
+                g.DrawString(indexText, font, Brushes.Gray, indexX, indexY);
             }
         }
 
@@ -130,16 +161,30 @@ namespace Đồ_Án_Cơ_Sở_65130410
             int t = arr[i];
             arr[i] = arr[j];
             arr[j] = t;
+
+            if (labels != null)
+            {
+                string s = labels[i];
+                labels[i] = labels[j];
+                labels[j] = s;
+            }
         }
+
 
         private void btnBubbleSort_Click(object sender, EventArgs e)
         {
-            isSorted = false;
+        
+            if (isSorting)
+            {
+                CheckSorting();
+                return;
+            }
+
             if (!CheckArray()) return;
 
-            LockControls();
-
-            Explain(
+            isSorting = true;
+            isSorted = false;
+        Explain(
                 "Bubble Sort hoạt động bằng cách so sánh từng cặp phần tử liền kề trong mảng. " +
                 "Nếu phần tử đứng trước lớn hơn phần tử đứng sau thì chúng sẽ được hoán đổi vị trí. " +
                 "Sau mỗi vòng lặp, phần tử lớn nhất sẽ dần được đẩy về cuối mảng. " +
@@ -171,7 +216,7 @@ namespace Đồ_Án_Cơ_Sở_65130410
             }
             isSorted = true;
             lblStatus.Text = "Bubble Sort xong";
-            UnlockControls();
+            isSorting = false;
             DrawAllGreen();
         }
 
@@ -179,8 +224,12 @@ namespace Đồ_Án_Cơ_Sở_65130410
         {
             isSorted = false;
             if (!CheckArray()) return;
-
-            LockControls();
+            if (isSorting)
+            {
+                CheckSorting();
+                return;
+            }
+            isSorting = true;
 
             Explain(
                 "Quick Sort chọn một phần tử làm chốt (pivot) để phân chia mảng. " +
@@ -218,35 +267,55 @@ namespace Đồ_Án_Cơ_Sở_65130410
                 if (i < r) QuickSort(i, r);
             }
 
-            quickRunning--;   
+            quickRunning--;
 
             if (quickRunning == 0)
             {
                 lblStatus.Text = "Quick Sort xong";
-                UnlockControls();
+                isSorting = false;
                 isSorted = true;
                 DrawAllGreen();
             }
         }
 
-        private void btnHeapSort_Click(object sender, EventArgs e)
+        private async void btnHeapSort_Click(object sender, EventArgs e)
         {
-            isSorted = false;
             if (!CheckArray()) return;
 
-            LockControls();
+            if (isSorting)
+            {
+                CheckSorting();
+                return;
+            }
+
+            isSorting = true;
+            isSorted = false;
 
             Explain(
-                "Heap Sort bắt đầu bằng việc xây dựng cấu trúc heap từ mảng ban đầu, trong đó phần tử lớn nhất luôn nằm ở gốc heap. " +
+                "Heap Sort bắt đầu bằng việc xây dựng cấu trúc heap từ mảng ban đầu, " +
+                "trong đó phần tử lớn nhất luôn nằm ở gốc heap. " +
                 "Sau đó, phần tử lớn nhất được hoán đổi với phần tử cuối mảng và loại khỏi heap. " +
-                "Heap được điều chỉnh lại để tiếp tục tìm phần tử lớn nhất tiếp theo, quá trình này lặp lại cho đến khi mảng được sắp xếp."
+                "Heap được điều chỉnh lại để tiếp tục tìm phần tử lớn nhất tiếp theo."
             );
             ShowComparison("Heap");
             lblStatus.Text = "Heap Sort đang chạy";
-            HeapSort();
+
+            try
+            {
+                await HeapSort();
+            }
+            finally
+            {
+                isSorting = false;
+                isSorted = true;
+
+                lblStatus.Text = "Heap Sort xong";
+                DrawArray();
+            }
         }
 
-        private async void HeapSort()
+
+        private async Task HeapSort()
         {
             int n = arr.Length;
 
@@ -260,12 +329,8 @@ namespace Đồ_Án_Cơ_Sở_65130410
                 await Delay();
                 await Heapify(i, 0);
             }
-
-            lblStatus.Text = "Heap Sort xong";
-            UnlockControls();
-            isSorted = true;
-            DrawAllGreen();
         }
+
 
         private async Task Heapify(int n, int i)
         {
@@ -285,12 +350,18 @@ namespace Đồ_Án_Cơ_Sở_65130410
             }
         }
 
-        private void btnMergeSort_Click(object sender, EventArgs e)
+        private async void btnMergeSort_Click(object sender, EventArgs e)
         {
-            isSorted = false;
+            if (isSorting)
+            {
+                CheckSorting();
+                return;
+            }
+
             if (!CheckArray()) return;
 
-            LockControls();
+            isSorting = true;
+            isSorted = false;
 
             Explain(
                 "Merge Sort hoạt động theo nguyên lý chia để trị. " +
@@ -299,24 +370,25 @@ namespace Đồ_Án_Cơ_Sở_65130410
             );
             ShowComparison("Merge");
             lblStatus.Text = "Merge Sort đang chạy";
-            MergeSort(0, arr.Length - 1);
+
+            await MergeSort(0, arr.Length - 1);
+
+            isSorted = true;
+            isSorting = false;
+
+            lblStatus.Text = "Merge Sort xong";
+            DrawArray();
         }
 
-        private async void MergeSort(int l, int r)
+        private async Task MergeSort(int l, int r)
         {
             if (l >= r) return;
 
             int m = (l + r) / 2;
-            MergeSort(l, m);
-            MergeSort(m + 1, r);
+
+            await MergeSort(l, m);
+            await MergeSort(m + 1, r);
             await Merge(l, m, r);
-
-            if (l == 0 && r == arr.Length - 1)
-            {
-                lblStatus.Text = "Merge Sort xong";
-                UnlockControls();
-
-            }
         }
 
         private async Task Merge(int l, int m, int r)
@@ -388,47 +460,187 @@ namespace Đồ_Án_Cơ_Sở_65130410
                     "- Phù hợp với các bài toán yêu cầu hiệu suất ổn định.";
         }
 
-        void LockControls()
-        {
-            btnBubbleSort.Enabled = false;
-            btnQuickSort.Enabled = false;
-            btnHeapSort.Enabled = false;
-            btnMergeSort.Enabled = false;
-            btnRandom.Enabled = false;
-        }
 
-        void UnlockControls()
-        {
-            btnBubbleSort.Enabled = true;
-            btnQuickSort.Enabled = true;
-            btnHeapSort.Enabled = true;
-            btnMergeSort.Enabled = true;
-            btnRandom.Enabled = true;
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
         void DrawAllGreen()
         {
+            if (arr == null || arr.Length == 0) return;
+
             panelDraw.Refresh();
             Graphics g = panelDraw.CreateGraphics();
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             int w = panelDraw.Width / arr.Length;
+            int maxValue = arr.Max();
+            int maxHeight = panelDraw.Height - 30;
 
             for (int i = 0; i < arr.Length; i++)
             {
-                int h = arr[i];
-                int x = i * w + 4;
-                int y = panelDraw.Height - h;
-                int width = w - 8;
+                int h = (int)((arr[i] * 1.0 / maxValue) * maxHeight);
 
-                using (Brush brush = new SolidBrush(Color.LimeGreen))
+                int x = i * w + 6;
+                int y = panelDraw.Height - h - 6;
+                int width = w - 12;
+
+                Rectangle rect = new Rectangle(x, y, width, h);
+                Rectangle shadowRect = new Rectangle(x + 3, y + 3, width, h);
+
+                using (Brush shadow = new SolidBrush(Color.FromArgb(40, 0, 0, 0)))
                 {
-                    g.FillRectangle(brush, x, y, width, h);
+                    g.FillRectangle(shadow, shadowRect);
+                }
+
+                using (var path = new System.Drawing.Drawing2D.GraphicsPath())
+                {
+                    int r = 8;
+                    path.AddArc(x, y, r, r, 180, 90);
+                    path.AddArc(x + width - r, y, r, r, 270, 90);
+                    path.AddArc(x + width - r, y + h - r, r, r, 0, 90);
+                    path.AddArc(x, y + h - r, r, r, 90, 90);
+                    path.CloseFigure();
+
+                    using (var brush = new System.Drawing.Drawing2D.LinearGradientBrush(
+                        rect,
+                        Color.FromArgb(46, 204, 113),
+                        Color.FromArgb(39, 174, 96),
+                        90f))
+                    {
+                        g.FillPath(brush, path);
+                    }
+
+                    using (Pen border = new Pen(Color.FromArgb(30, 130, 76), 1))
+                    {
+                        g.DrawPath(border, path);
+                    }
+                }
+                string valueText = arr[i].ToString();
+                Font font = new Font("Segoe UI", 9, FontStyle.Bold);
+                SizeF size = g.MeasureString(valueText, font);
+
+                float tx = x + (width - size.Width) / 2;
+                float ty = y - size.Height - 2;
+
+                if (ty >= 0)
+                    g.DrawString(valueText, font, Brushes.Black, tx, ty);
+            }
+        }
+
+
+        private void btnNhapTay_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string input = txtInput.Text.Trim();
+                if (string.IsNullOrEmpty(input))
+                {
+                    MessageBox.Show("Chưa nhập dữ liệu!");
+                    return;
+                }
+
+                string[] parts = input.Split(',')
+                                      .Where(p => !string.IsNullOrWhiteSpace(p))
+                                      .ToArray();
+
+                arr = new int[parts.Length];
+
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    if (!int.TryParse(parts[i].Trim(), out arr[i]) || arr[i] <= 0)
+                    {
+                        MessageBox.Show($"Giá trị không hợp lệ: {parts[i]}");
+                        return;
+                    }
+                }
+                isFromExcel = false;
+                isSorted = false;
+                DrawArray();
+                lblStatus.Text = "Đã nhập dữ liệu thủ công";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+        }
+
+
+
+        private void btnImportExcel_Click(object sender, EventArgs e)
+        {
+            if (CheckSorting()) return;
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Excel files (*.xlsx)|*.xlsx";
+
+            if (ofd.ShowDialog() != DialogResult.OK) return;
+
+            using (var stream = File.Open(ofd.FileName, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    DataSet ds = reader.AsDataSet();
+                    DataTable table = ds.Tables[0];
+
+                    int n = table.Rows.Count;
+
+                    arr = new int[n];
+                    labels = new string[n];
+
+                    for (int i = 0; i < n; i++)
+                    {
+                        labels[i] = table.Rows[i][0].ToString();
+                        arr[i] = Convert.ToInt32(table.Rows[i][1]);
+                    }
                 }
             }
+            isFromExcel = true;
+            isSorted = false;
+            DrawArray();
+            lblStatus.Text = "Đã nhập dữ liệu từ Excel (.xlsx)";
+        }
+
+        private void panelDraw_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!isFromExcel|| arr == null || labels == null || arr.Length == 0) return;
+
+            int w = panelDraw.Width / arr.Length;
+            int index = e.X / w;
+
+            if (index < 0 || index >= arr.Length)
+            {
+                barToolTip.Hide(panelDraw);
+                hoverIndex = -1;
+                return;
+            }
+
+            if (hoverIndex != index)
+            {
+                hoverIndex = index;
+
+                string text =
+                    labels[index] +
+                    "\nVị trí: " + index +
+                    "\nTrạng thái: " + (isSorted ? "Đã sắp xếp" : "Chưa sắp xếp");
+
+                barToolTip.Show(text, panelDraw, e.X + 15, e.Y + 15);
+            }
+        }
+
+        private void panelDraw_MouseLeave(object sender, EventArgs e)
+        {
+            barToolTip.Hide(panelDraw);
+            hoverIndex = -1;
+        }
+        bool CheckSorting()
+        {
+            if (isSorting)
+            {
+                MessageBox.Show(
+                    "Dữ liệu đang được sắp xếp, vui lòng đợi!",
+                    "Thông báo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+                return true;
+            }
+            return false;
         }
 
     }
